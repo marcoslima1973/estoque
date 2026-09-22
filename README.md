@@ -1,34 +1,20 @@
-# Controle de Estoque
+# Controle de Estoque — Supabase
 
-Aplicativo web em português para produtos, entradas, saídas, reservas, contagem física e histórico, com importação e exportação Excel.
+React com banco PostgreSQL e autenticação do Supabase. A versão atual usa src/main.tsx, app/inventory.tsx e lib/supabase.ts. Os arquivos antigos do servidor Sites não participam da compilação estática.
 
-## Privacidade
+## Usar
+Entre com e-mail e senha do aplicativo. Se necessário, crie uma conta e confirme o e-mail. Cada conta acessa somente seus produtos e movimentações. A conta do painel Supabase não é automaticamente uma conta do aplicativo.
 
-Este repositório contém apenas o código. A planilha original, os saldos, os custos reais e o banco de produção não estão incluídos. Importe sua própria planilha após configurar a aplicação. Não adicione arquivos de dados ou credenciais ao repositório.
+Importe Lista_de_Estoque pelo botão Importar Excel. A exportação preserva Sheet1 e as quatro colunas exatas de Update_warehouse_SKU01.xlsx. Importações repetidas preservam os saldos existentes. A tela e a exportação de histórico mostram as últimas 2.000 movimentações; as demais permanecem no banco.
 
-## Tecnologias
+## Banco
+Projeto wbuupbmqwjropdvisuce. Tabelas estoque_products e estoque_movements com RLS por usuário. O comando de estoque atualiza saldo e histórico na mesma transação, com bloqueio de linha. Clientes podem consultar seus dados, mas não podem alterar saldos diretamente nem apagar histórico. Chaves administrativas não são usadas no navegador.
 
-React, TypeScript, Vinext, Cloudflare Workers e D1. A autenticação online usa a integração do Sites com o ChatGPT. O acesso ao banco é validado no servidor e separado por usuário.
+A estrutura aplicada está em supabase/estoque-schema.sql. Não execute novamente no projeto configurado. As tabelas anteriores foram removidas a pedido do proprietário; o backup privado fica fora do repositório.
 
-## Executar localmente
+## Desenvolvimento e publicação
+Node 24 e pnpm 11.19.0. Execute pnpm install --frozen-lockfile, pnpm dev e pnpm build. A compilação produz docs/, para GitHub Pages na branch main, pasta /docs. Recompile e envie código e docs juntos após alterações.
 
-Requisitos: Node.js 24 e pnpm 11.19.0.
+Os dados da versão antiga do Sites não são migrados automaticamente. A migração requer identificar a conta de destino no Supabase. Não importe saldos antigos se houver movimentações posteriores sem reconciliá-los.
 
-```sh
-pnpm install --frozen-lockfile
-pnpm build
-node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0000_bumpy_power_pack.sql
-pnpm dev
-```
-
-O perfil portátil simula o login apenas no ambiente local. A configuração de execução assume o perfil portátil quando nenhum perfil local estiver salvo.
-
-## Hospedagem
-
-A aplicação requer servidor, banco D1 e autenticação do Sites. GitHub Pages sozinho não executa o aplicativo. A cópia no GitHub não altera a hospedagem existente nem sincroniza seu banco. Para outra instalação Sites, crie um projeto próprio e associe o identificador em `.openai/hosting.json`. Para outra plataforma, adapte o banco e a autenticação.
-
-## Excel
-
-A importação usa a lista de estoque com SKU, título, armazém e saldos. A exportação usa a aba `Sheet1` e as quatro colunas do modelo `Update_warehouse_SKU01.xlsx`, preservando a precisão dos custos e distinguindo zero de campos vazios.
-
-Consulte [COMO_USAR.md](COMO_USAR.md) para as operações e as limitações da versão.
+Reservas, entradas, saídas e contagem física estão disponíveis. Perfis de equipe, transferências entre armazéns e estornos vinculados ainda não estão implementados.
