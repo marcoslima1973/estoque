@@ -1,4 +1,4 @@
-export type Product = {id:string;sku:string;title:string;warehouse:string;shelf:string;minimum:number|null;quantity:number;reserved:number;purchase:number;transit:number;cost:number|null;created:string;version:number};
+export type Product = {id:string;sku:string;title:string;warehouse:string;shelf:string;minimum:number|null;quantity:number;reserved:number;purchase:number;transit:number;cost:number|null;created:string;version:number;initial?:number;entries?:number;exits?:number};
 export function whole(value:unknown, label:string, zero=true) {const n=Number(value); if(value === '' || value === null || !Number.isSafeInteger(n) || n<(zero?0:1) || n>100000000) throw new Error(`${label}: informe uma quantidade inteira válida.`); return n;}
 export function money(value:unknown) {if(value===''||value===null||value===undefined)return null; const n=Number(value);if(!Number.isFinite(n)||n<0||n>1e10)throw new Error('Custo inválido.');return n;}
 export function transition(p:Product,type:string,n:number,cost:number|null) {
