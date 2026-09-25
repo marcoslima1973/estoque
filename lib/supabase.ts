@@ -17,7 +17,7 @@ export async function inventoryData() {
  const totals=summarizeMovements(movements);
  for(const p of products)Object.assign(p,totals.get(p.id)??{initial:0,entries:0,exits:0});
  const byId=new Map(products.map(p=>[p.id,p]));
- return {products:products.sort((a,b)=>a.sku.localeCompare(b.sku)),movements:movements.slice(0,2000).map(m=>({...m,sku:byId.get(m.product)?.sku??'',title:byId.get(m.product)?.title??'',warehouse:byId.get(m.product)?.warehouse??''}))};
+ return {products:products.sort((a,b)=>a.sku.localeCompare(b.sku)),movements:movements.map(m=>({...m,sku:byId.get(m.product)?.sku??'',title:byId.get(m.product)?.title??'',warehouse:byId.get(m.product)?.warehouse??''}))};
 }
 export async function inventoryCommand(body:unknown){
  const {data,error}=await supabase.rpc('estoque_command',{body});
